@@ -53,6 +53,9 @@
     <Reference Include="AForge.Video.FFMPEG">
       <HintPath>..\..\..\..\Users\Иван Коротеев\source\repos\OneMinuteVideoForms\aforge\Release\AForge.Video.FFMPEG.dll</HintPath>
     </Reference>
+    <Reference Include="AForge.Vision, Version=2.2.5.0, Culture=neutral, PublicKeyToken=b612fa915eefaa06, processorArchitecture=MSIL">
+      <HintPath>..\packages\AForge.Vision.2.2.5\lib\AForge.Vision.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
