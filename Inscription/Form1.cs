@@ -27,6 +27,7 @@ namespace Inscription
         //
         //From https://github.com/Reddine/Webcam-Capture-AForge.Net
         //
+        //
         FilterInfoCollection videoDevices;
         private MotionDetector detector = new MotionDetector((IMotionDetector)new TwoFramesDifferenceDetector(), (IMotionProcessing)null);
         List<Bitmap> currentFrames = new List<Bitmap>();
