@@ -18,7 +18,6 @@ using AForge.Video.DirectShow;
 using System.Drawing.Imaging;
 using System.Net;
 using System.IO;
-using AForge.Vision.Motion;
 
 namespace Inscription
 {
@@ -28,12 +27,7 @@ namespace Inscription
         //From https://github.com/Reddine/Webcam-Capture-AForge.Net
         //
         FilterInfoCollection videoDevices;
-        private MotionDetector detector = new MotionDetector((IMotionDetector)new TwoFramesDifferenceDetector(), (IMotionProcessing)null);
-        List<Bitmap> currentFrames = new List<Bitmap>();
-        List<float> MotionLevels = new List<float>();
-        VideoCaptureDevice device;
 
-        long tickCounter = 0;
         public Form1()
         {
             InitializeComponent();
@@ -62,7 +56,9 @@ namespace Inscription
 
             devicesCombo.SelectedIndex = 0;
 
-            
+            VideoCaptureDevice videoCaptureSource = new VideoCaptureDevice(videoDevices[devicesCombo.SelectedIndex].MonikerString);
+            videoSourcePlayer.VideoSource = videoCaptureSource;
+            videoSourcePlayer.Start();
         }
 
         private void takePictureBtn_Click(object sender, EventArgs e)
@@ -74,7 +70,6 @@ namespace Inscription
             {
                 Bitmap picture = videoSourcePlayer.GetCurrentVideoFrame();
                 picture.Save(strFilename, ImageFormat.Jpeg);
-                currentFrames.Add(picture);
                 labelSaved.Text = "Capture Saved : " + strFilename;                
             }
         }
@@ -89,88 +84,11 @@ namespace Inscription
 
         private void devicesCombo_SelectedIndexChanged(object sender, EventArgs e)
         {
-            //videoSourcePlayer.SignalToStop();
-            //videoSourcePlayer.WaitForStop();
-            //VideoCaptureDevice videoCaptureSource = new VideoCaptureDevice(videoDevices[devicesCombo.SelectedIndex].MonikerString);
-            //videoSourcePlayer.VideoSource = videoCaptureSource;
-            //videoSourcePlayer.Start();
-        }
-
-        private void ButtonStart_Click(object sender, EventArgs e)
-        {
-            VideoCaptureDevice videoCaptureSource = new VideoCaptureDevice(videoDevices[devicesCombo.SelectedIndex].MonikerString);
-            device = videoCaptureSource;    
-            videoSourcePlayer.VideoSource = videoCaptureSource;
-            videoSourcePlayer.Start();
-            timer1.Start();
-        }
-
-        private void ButtonStop_Click(object sender, EventArgs e)
-        {
             videoSourcePlayer.SignalToStop();
             videoSourcePlayer.WaitForStop();
-            timer1.Stop();
-        }
-
-        private void Timer1_Tick(object sender, EventArgs e)
-        {
-            if (tickCounter>0 && tickCounter % 300 == 0)
-            {
-                //count average motion over minute
-                float level = AverageMotion(60);//porog 0.07
-                float max = MaxMotion(60);
-                MessageBox.Show("level=" +level+" max="+max) ;
-                
-            }
-            labelTicks.Text = tickCounter.ToString();
-            if (videoSourcePlayer.IsRunning)
-            {
-                Bitmap picture = videoSourcePlayer.GetCurrentVideoFrame();
-                //currentFrames.Add(picture);
-                //takePictureBtn_Click(null, null);
-                //picture = currentFrames.Last();
-                if (tickCounter % 10 == 0 && picture != null)
-                {
-                    float num = detector.ProcessFrame(picture);
-                    MotionLevels.Add(num);
-                }
-            }
-            tickCounter++;
-        }
-        public float AverageMotion(int seconds)
-        {
-            try
-            {
-                float num1 = 0.0f;
-                int num2 = MotionLevels.Count - 1 - seconds;
-                if (num2 < 0) num2 = 0;
-                for (int index = MotionLevels.Count - 1; index > num2; --index)
-                    num1 += MotionLevels[index];
-                return num1 / (float)seconds;
-            }
-            catch
-            {
-                return 0.0f;
-            }
-
-        }
-        public float MaxMotion(int seconds)
-        {
-            try
-            {
-                float max = -10;
-                int num2 = MotionLevels.Count - 1 - seconds;
-                if (num2 < 0) num2 = 0;
-                for (int index = MotionLevels.Count - 1; index > num2; --index)
-                    if (MotionLevels[index] > max)
-                        max = MotionLevels[index];
-                return max;
-            }
-            catch
-            {
-                return 0.0f;
-            }
-
+            VideoCaptureDevice videoCaptureSource = new VideoCaptureDevice(videoDevices[devicesCombo.SelectedIndex].MonikerString);
+            videoSourcePlayer.VideoSource = videoCaptureSource;
+            videoSourcePlayer.Start();
         }
     }
 }
