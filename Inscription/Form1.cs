@@ -20,6 +20,7 @@ using System.Net;
 using System.IO;
 using AForge.Vision.Motion;
 
+
 namespace Inscription
 {
     public partial class Form1 : Form
@@ -33,6 +34,7 @@ namespace Inscription
         List<Bitmap> currentFrames = new List<Bitmap>();
         List<float> MotionLevels = new List<float>();
         VideoCaptureDevice device;
+        List<string> JpegFileNames = new List<string>();
 
         long tickCounter = 0;
         public Form1()
@@ -112,21 +114,78 @@ namespace Inscription
             videoSourcePlayer.WaitForStop();
             timer1.Stop();
         }
+        private void CreateVideo()
+        {
+            int width = 640;
+            int height = 480;
+            Image f = Image.FromFile(JpegFileNames[0]);
+            width = f.Width;
+            height = f.Height;
 
+            Accord.Video.FFMPEG.VideoFileWriter vw = new Accord.Video.FFMPEG.VideoFileWriter();
+            
+            // create instance of video writer
+            //VideoFileWriter writer = new VideoFileWriter();
+            // create new video file
+            string format = "yyyy_MM_dd_HH_mm_ss_fff";    // Use this format
+            DateTime time = DateTime.Now;
+            String strFilename = "Video-" + time.ToString(format) + ".avi";
+            vw.Open(strFilename, width, height, 2, Accord.Video.FFMPEG.VideoCodec.MPEG4);
+            //writer.Open(strFilename, width, height, 25, VideoCodec.MPEG4);
+            // create a bitmap to save into the video file
+            Bitmap image = new Bitmap(width, height, PixelFormat.Format24bppRgb);
+            // write video frames
+            foreach (var file in JpegFileNames)
+            {
+                Bitmap img = (Bitmap)Bitmap.FromFile(file);
+                vw.WriteVideoFrame(img);
+            }
+            vw.Close();
+            JpegFileNames.Clear();
+        }
         private void Timer1_Tick(object sender, EventArgs e)
         {
-            if (tickCounter>0 && tickCounter % 300 == 0)
+            if (tickCounter>0 && tickCounter % 600 == 0)
             {
                 //count average motion over minute
                 float level = AverageMotion(60);//porog 0.07
                 float max = MaxMotion(60);
-                MessageBox.Show("level=" +level+" max="+max) ;
-                
+                //MessageBox.Show("level=" +level+" max="+max) ;
+                label2.Text = "level=" + level + " max=" + max;
+                if (level > 0.07)
+                {
+                    //save jpegs to avi
+                    CreateVideo();
+                }
+                else
+                {
+                    //delete files
+                    foreach (var file in JpegFileNames)
+                    {
+                        try
+                        {
+                            File.Delete(file);
+                        }
+                        catch (Exception)
+                        {
+                            //ничего не делаем                            
+                        }
+                    }
+                    JpegFileNames.Clear();
+                }
             }
             labelTicks.Text = tickCounter.ToString();
             if (videoSourcePlayer.IsRunning)
             {
                 Bitmap picture = videoSourcePlayer.GetCurrentVideoFrame();
+                if (tickCounter % 5 == 0 && picture != null)
+                {
+                    string format = "yyyy_MM_dd_HH_mm_ss_fff";    // Use this format
+                    DateTime time = DateTime.Now;
+                    String strFilename = "Capture-" + time.ToString(format) + ".jpg";
+                    picture.Save(strFilename);
+                    JpegFileNames.Add(strFilename);
+                }
                 //currentFrames.Add(picture);
                 //takePictureBtn_Click(null, null);
                 //picture = currentFrames.Last();
@@ -172,6 +231,17 @@ namespace Inscription
                 return 0.0f;
             }
 
+        }
+
+        private void ButtonVideo_Click(object sender, EventArgs e)
+        {
+            string dir = Directory.GetCurrentDirectory();
+            var files = Directory.GetFiles(dir, "*.jpg");
+            foreach (var f in files)
+            {
+                JpegFileNames.Add(f);
+            }
+            CreateVideo();
         }
     }
 }

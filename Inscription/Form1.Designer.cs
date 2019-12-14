@@ -38,6 +38,8 @@
             this.buttonStop = new System.Windows.Forms.Button();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.labelTicks = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.buttonVideo = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // devicesCombo
@@ -125,11 +127,32 @@
             this.labelTicks.TabIndex = 7;
             this.labelTicks.Text = "ticks";
             // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(270, 427);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(57, 20);
+            this.label2.TabIndex = 8;
+            this.label2.Text = "Motion";
+            // 
+            // buttonVideo
+            // 
+            this.buttonVideo.Location = new System.Drawing.Point(298, 460);
+            this.buttonVideo.Name = "buttonVideo";
+            this.buttonVideo.Size = new System.Drawing.Size(81, 38);
+            this.buttonVideo.TabIndex = 9;
+            this.buttonVideo.Text = "Video";
+            this.buttonVideo.UseVisualStyleBackColor = true;
+            this.buttonVideo.Click += new System.EventHandler(this.ButtonVideo_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(410, 609);
+            this.Controls.Add(this.buttonVideo);
+            this.Controls.Add(this.label2);
             this.Controls.Add(this.labelTicks);
             this.Controls.Add(this.buttonStop);
             this.Controls.Add(this.buttonStart);
@@ -158,6 +181,8 @@
         private System.Windows.Forms.Button buttonStop;
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.Label labelTicks;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Button buttonVideo;
     }
 }
 
