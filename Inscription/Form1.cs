@@ -13,6 +13,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Linq;
 using System.Windows.Forms;
+using WebCam;
 
 //
 //From https://github.com/Reddine/Webcam-Capture-AForge.Net
@@ -142,7 +143,7 @@ namespace Inscription
                 /// Avg motion on 1 minutes
                 float index = AverageMotion(60);
                 float max = MaxMotion(60);
-                label2.Text = $"index:{Math.Round(index, 5)} max: {Math.Round(max, 5)}";
+                //label2.Text = $"index:{Math.Round(index, 5)} max: {Math.Round(max, 5)}";
                 if (index > 0.07)
                     CreateVideo();
             }
@@ -159,7 +160,7 @@ namespace Inscription
                 }
             }
 
-            labelTicks.Text = $"{tickCounter++}";
+            //labelTicks.Text = $"{tickCounter++}";
         }
 
         public float AverageMotion(int seconds)
@@ -193,6 +194,16 @@ namespace Inscription
         private void ButtonVideo_Click(object sender, EventArgs e)
         {
             CreateVideo();
+        }
+
+        private void выходToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Environment.Exit(0);
+        }
+
+        private void changeAccount_Click(object sender, EventArgs e)
+        {
+            new AccountSettings().ShowDialog();
         }
     }
 }
