@@ -42,7 +42,6 @@
             this.parameters = new System.Windows.Forms.ToolStripMenuItem();
             this.changeAccount = new System.Windows.Forms.ToolStripMenuItem();
             this.выходToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.аккаунтToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripLabel3 = new System.Windows.Forms.ToolStripLabel();
             this.tlsTicks = new System.Windows.Forms.ToolStripStatusLabel();
@@ -51,6 +50,7 @@
             this.tlsMotionIndex = new System.Windows.Forms.ToolStripStatusLabel();
             this.panel1 = new System.Windows.Forms.Panel();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.TestSend = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.statusStrip2.SuspendLayout();
@@ -148,8 +148,7 @@
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.parameters,
-            this.аккаунтToolStripMenuItem});
+            this.parameters});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(488, 24);
@@ -160,6 +159,7 @@
             // 
             this.parameters.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.changeAccount,
+            this.TestSend,
             this.выходToolStripMenuItem});
             this.parameters.Name = "parameters";
             this.parameters.Size = new System.Drawing.Size(83, 20);
@@ -168,7 +168,7 @@
             // changeAccount
             // 
             this.changeAccount.Name = "changeAccount";
-            this.changeAccount.Size = new System.Drawing.Size(205, 22);
+            this.changeAccount.Size = new System.Drawing.Size(226, 22);
             this.changeAccount.Text = "Сменить аккаунт почты";
             this.changeAccount.Click += new System.EventHandler(this.changeAccount_Click);
             // 
@@ -176,16 +176,9 @@
             // 
             this.выходToolStripMenuItem.Name = "выходToolStripMenuItem";
             this.выходToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F4)));
-            this.выходToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
+            this.выходToolStripMenuItem.Size = new System.Drawing.Size(226, 22);
             this.выходToolStripMenuItem.Text = "Выход";
             this.выходToolStripMenuItem.Click += new System.EventHandler(this.выходToolStripMenuItem_Click);
-            // 
-            // аккаунтToolStripMenuItem
-            // 
-            this.аккаунтToolStripMenuItem.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.аккаунтToolStripMenuItem.Name = "аккаунтToolStripMenuItem";
-            this.аккаунтToolStripMenuItem.Size = new System.Drawing.Size(66, 20);
-            this.аккаунтToolStripMenuItem.Text = "Аккаунт:";
             // 
             // statusStrip1
             // 
@@ -232,8 +225,7 @@
             // tlsMotionIndex
             // 
             this.tlsMotionIndex.Name = "tlsMotionIndex";
-            this.tlsMotionIndex.Size = new System.Drawing.Size(27, 18);
-            this.tlsMotionIndex.Text = "text";
+            this.tlsMotionIndex.Size = new System.Drawing.Size(0, 18);
             // 
             // panel1
             // 
@@ -263,6 +255,13 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 39F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(488, 39);
             this.tableLayoutPanel1.TabIndex = 16;
+            // 
+            // TestSend
+            // 
+            this.TestSend.Name = "TestSend";
+            this.TestSend.Size = new System.Drawing.Size(226, 22);
+            this.TestSend.Text = "Тестовая отправка на почту";
+            this.TestSend.Click += new System.EventHandler(this.TestSend_Click);
             // 
             // Form1
             // 
@@ -309,7 +308,6 @@
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem parameters;
         private System.Windows.Forms.ToolStripMenuItem changeAccount;
-        private System.Windows.Forms.ToolStripMenuItem аккаунтToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem выходToolStripMenuItem;
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripLabel toolStripLabel3;
@@ -319,6 +317,7 @@
         private System.Windows.Forms.ToolStripStatusLabel tlsMotionIndex;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private System.Windows.Forms.ToolStripMenuItem TestSend;
     }
 }
 

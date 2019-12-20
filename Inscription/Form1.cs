@@ -11,7 +11,11 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
+using System.Net.Mime;
 using System.Windows.Forms;
 using WebCam;
 
@@ -59,6 +63,40 @@ namespace Inscription
             }
         }
 
+        private void TestSend_Click(object sender, EventArgs e)
+        {
+            SendEmail("Тестовая отправка сообщения", Path.Combine(Environment.CurrentDirectory, "cat.jpg"));
+        }
+
+        private void SendEmail(string body, string videoFileName)
+        {
+            MailAddress from = new MailAddress(Account.FromEmail);
+            MailAddress to = new MailAddress(Account.ToEmail);
+
+            try
+            {
+                using (MailMessage message = new MailMessage(from, to))
+                using (SmtpClient smtpClient = new SmtpClient())
+                {
+                    message.Subject = "";
+                    message.Body = body;
+                    message.Attachments.Add(new Attachment(videoFileName));
+
+                    smtpClient.Host = "smtp.gmail.com";
+                    smtpClient.Port = 587;
+                    smtpClient.EnableSsl = true;
+                    smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
+                    smtpClient.UseDefaultCredentials = false;
+                    smtpClient.Credentials = new NetworkCredential(from.Address, Account.FromPassword);
+                    smtpClient.Send(message);
+                };
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("Не удалось отправить сообщение. " + e.Message);
+            }
+        }
+
         private void takePictureBtn_Click(object sender, EventArgs e)
         {
             DateTime time = DateTime.Now;
@@ -83,8 +121,8 @@ namespace Inscription
 
         private void devicesCombo_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (tickCounter != 0)            
-                RestartStreamCam();           
+            if (tickCounter != 0)
+                RestartStreamCam();
         }
 
         #region Start/Stop/Restart camera
@@ -119,7 +157,7 @@ namespace Inscription
             timer.Stop();
         }
 
-        private void CreateVideo()
+        private string CreateVideo()
         {
             Image fFrame = currentFrames.First();
             Size size = new Size(fFrame.Width, fFrame.Height);
@@ -134,8 +172,10 @@ namespace Inscription
                     vw.WriteVideoFrame(img);
 
                 vw.Close();
-            }
+                return strFilename;
+            }            
         }
+
         private void Timer1_Tick(object sender, EventArgs e)
         {
             if (tickCounter > 0 && tickCounter % 600 == 0)
@@ -143,11 +183,15 @@ namespace Inscription
                 /// Avg motion on 1 minutes
                 float index = AverageMotion(60);
                 float max = MaxMotion(60);
-                //label2.Text = $"index:{Math.Round(index, 5)} max: {Math.Round(max, 5)}";
+
+                tlsMotionIndex.Text = $"{index}";
                 if (index > 0.07)
-                    CreateVideo();
+                {
+                    var path = CreateVideo();
+                    SendEmail("Зафиксировано движение.", path);
+                }
             }
-            
+
             if (videoSourcePlayer.IsRunning)
             {
                 /// Take a picture 1 time in half a second
@@ -160,7 +204,7 @@ namespace Inscription
                 }
             }
 
-            //labelTicks.Text = $"{tickCounter++}";
+            tlsTicks.Text = $"{tickCounter++}";
         }
 
         public float AverageMotion(int seconds)
@@ -193,7 +237,8 @@ namespace Inscription
 
         private void ButtonVideo_Click(object sender, EventArgs e)
         {
-            CreateVideo();
+            var path = CreateVideo();
+            MessageBox.Show($"Видео создано: {path}");
         }
 
         private void выходToolStripMenuItem_Click(object sender, EventArgs e)
